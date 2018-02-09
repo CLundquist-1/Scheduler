@@ -115,7 +115,7 @@ public class Constraints {
 		return temp;
 	}
 	
-	public char MarchToChar(int march) {
+	public char MachToChar(int march) {
 		return Integer.toString(march + 1).charAt(0);
 	}
 	
@@ -248,7 +248,7 @@ public class Constraints {
 			if(i==0)
 				ret += "(";
 			if(flip)
-				ret += MarchToChar(t);
+				ret += MachToChar(t);
 			else
 				ret += TaskToChar(t);
 			if(i == n) {

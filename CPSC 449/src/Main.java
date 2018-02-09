@@ -24,10 +24,23 @@ public class Main {
 	static final String noSolution = "No valid solution possible!";
 	static final String programUse = "Proper use of the program is: \n     scheduler <inputfile> <outputfile>";
 	
+	static int[] cState = new int[8];
+	static int[] tState = new int[8];
+	static int cPenalty;
+	static int tPenalty;
+	
+	static int[] bestState = new int[8];
+	static int bestPenalty = Integer.MAX_VALUE;
+	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		con = new Constraints();
+		
+		InitializeState(cState);
+		InitializeState(tState);
+		
+		
 		try {
 			ParseInput(args[0]);
 		} catch(IOException e) {
@@ -35,7 +48,130 @@ public class Main {
 		} catch(ArrayIndexOutOfBoundsException e) {
 			System.out.println(programUse);
 		}
+		if(!PlaceForced())
+			System.out.println(noSolution);
+		System.out.println(StateToString(cState) + " Penalty: " + cPenalty);
+		//Remember[row][column] || [mach][task]
+		//System.out.println(con.mp[0][1]);
 	}
+	
+	public static void InitializeState(int[] state) {
+		for(int i = 0; i < state.length; i++)
+			state[i] = -1;
+	}
+	
+	
+	public static boolean PlaceForced(){
+		for(int i = 0; i < con.fpa.size(); i += 2) {
+			int mach = con.fpa.get(i);
+			int task = con.fpa.get(i+1);
+			if(!CheckForbidden(mach, task))
+				return false;
+			if(!CheckNearHard(task, cState[modulo(mach+1,8)]))
+				return false;
+			if(!CheckNearHard(task, cState[modulo(mach-1,8)]))
+				return false;
+			cState[mach] = task;
+			cPenalty += con.mp[mach][task];
+			cPenalty += CheckNearPenalty(task, cState[modulo(mach+1,8)]);
+			cPenalty += CheckNearPenalty(task, cState[modulo(mach-1,8)]);
+		}
+		return true;
+	}
+	
+	public static boolean CheckForbidden(int mach, int task) {
+		for(int i = 0; i < con.fm.size(); i += 2) {
+			if(con.fm.get(i) == mach) {
+				if(con.fm.get(i+1) == task)
+					return false;
+			}
+		}
+		return true;
+	}
+	
+	public static boolean CheckNearHard(int task1, int task2) {
+		if(task1 == -1 || task2 == -1)
+			return true;
+		for(int i = 0; i < con.tnt.size(); i ++) {
+			if(con.tnt.get(i) == task1) {
+				if(i % 2 == 0) {
+					if(con.tnt.get(i+1) == task2)
+						return false;
+				}
+				else {
+					if(con.tnt.get(i-1) == task2)
+						return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public static int CheckNearPenalty(int task1, int task2) {
+		if(task1 == -1 || task2 == -1)
+			return 0;
+		for(int i = 0; i < con.tnp.size(); i ++) {
+			if((i+1) % 3 == 0)
+				continue;
+			if(con.tnp.get(i) == task1) {
+				if((i+1) % 2 == 0) {
+					if(con.tnp.get(i-1) == task2)
+						return con.tnp.get(i+1);
+				}
+				else {
+					if(con.tnp.get(i+1) == task2)
+						return con.tnp.get(i+2);
+				}
+			}
+		}
+		return 0;
+	}
+	
+	
+	public static int modulo(int x, int mod) {
+		return (((x % mod) + mod) % mod);
+	}
+	
+	
+	
+	
+	public static String StateToString(int[] state) {
+		String ret = "";
+		for(int i = 0; i < state.length; i++) {
+			ret += con.MachToChar(i) + ": " + con.TaskToChar(state[i]);
+			if(i != state.length-1)
+				ret += ", ";
+		}
+		return ret;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public static void ParseInput(String filename) throws IOException {
 		File file;
