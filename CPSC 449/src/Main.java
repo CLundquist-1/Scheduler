@@ -1,7 +1,9 @@
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class Main {
@@ -44,22 +46,43 @@ public class Main {
 		InitializeState(cState);
 		InitializeState(tState);
 		
+		BufferedWriter out;
 		
 		try {
-			ParseInput(args[0]);
+			out = new BufferedWriter(new FileWriter(args[1]));
+			try {
+				ParseInput(args[0]);
+			} catch(IOException e) {
+				//System.out.println(e.getMessage());				//Print to the console instead
+				out.write(e.getMessage());
+				out.close();
+				return;
+			}
+			if(!PlaceForced()) {
+				//System.out.println(noSolution);					//Print to the console instead
+				out.write(noSolution);
+				out.close();
+				return;
+			}
+			SetMinMax();
+			BruteForce();
+			out.write(SolutionToString2());
+			out.close();
 		} catch(IOException e) {
-			System.out.println(e.getMessage());
+			System.out.println("Please use a valid output file name");
 		} catch(ArrayIndexOutOfBoundsException e) {
-			System.out.println(programUse);
+			System.out.println(programUse);						//Print to the console instead
+			//out.write(programUse);
 		}
-		if(!PlaceForced()) {
-			System.out.println(noSolution);
-			return;
-		}
-		SetMinMax();
-		BruteForce();
-		System.out.println(SolutionToString());
-		System.out.println(StateToString(cState) + " Penalty: " + cPenalty);
+		
+		
+		////////////////////////Print Statements To Help Test//////////////////////////////////
+		//System.out.println(con.printConstraints()); 	//This will print out everything that was parsed in a neat order
+		System.out.println(SolutionToString());			//This will print out the current generated solution held in BestState and BestPenalty
+		//System.out.println(StateToString(cState) + " Penalty: " + cPenalty);	//Prints the current state which in this situation will only print the starting values (the set up after forced partial assignment)
+		
+		
+		
 		//Remember[row][column] || [mach][task]
 		//System.out.println(con.mp[0][1]);
 	}
@@ -307,6 +330,18 @@ public class Main {
 		return StateToString(bestState) + " Penalty: " + bestPenalty;
 	}
 	
+	public static String StateToString2(int[] state) {
+		String ret = "\"Solution\"";
+		for(int i = 0; i < state.length; i++) {
+			ret += " " + con.TaskToChar(state[i]);
+		}
+		return ret;
+	}
+	
+	
+	public static String SolutionToString2() {
+		return StateToString2(bestState) + "\"; Quality:\" " + bestPenalty;
+	}
 	
 	
 	
@@ -332,6 +367,7 @@ public class Main {
 	
 	
 	
+	////////////////////////////////////////////////////////////////////Parsing Steps (in order)////////////////////////////////////////////////
 	
 	
 	public static void ParseInput(String filename) throws IOException {
@@ -361,7 +397,6 @@ public class Main {
 		line = ReadTNT(br);
 		line = ReadMP(br);
 		ReadTNP(br);
-		System.out.println(con.printConstraints());
 	}
 	
 	public static Line Eat(BufferedReader br) throws IOException {
