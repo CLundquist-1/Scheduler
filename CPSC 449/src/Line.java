@@ -1,5 +1,9 @@
 
 public class Line {
+	public Line() {}
+	public Line(int _contents) {
+		contents = "" + (char)_contents;
+	}
 	public Line(String _contents) {
 		contents = _contents.toLowerCase();
 	}
@@ -7,7 +11,7 @@ public class Line {
 		contents = _contents;
 		eaten = _eaten;
 	}
-	private String contents;
+	private String contents = "";
 	public boolean eaten = false;
 	
 	
@@ -17,5 +21,9 @@ public class Line {
 	
 	public void SetContents(String _contents) {
 		contents = _contents.toLowerCase();
+	}
+	
+	public void SetContents(int _contents) {
+		contents = "" + (char)_contents;
 	}
 }

@@ -1,0 +1,24 @@
+Name:
+minimalisticexample
+
+forced partial assignment:
+(1,D)
+
+forbidden machine:
+(2,B)
+
+too-near tasks:
+(A,C)
+
+machine penalties:
+1 5 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1
+
+too-near penalities
+(A,B,2)
