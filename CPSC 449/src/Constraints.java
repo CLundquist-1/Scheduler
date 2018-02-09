@@ -159,7 +159,7 @@ public class Constraints {
 	private String printMP() {
 		String ret = Main.mpKey + "\n";
 		for(int i = 0; i < mp.length ; i++) {
-			for(int j = 0; j < mp[i].length-1; j++) {
+			for(int j = 0; j < mp[i].length; j++) {
 				if(j != 0)
 					ret += " ";
 				ret += mp[i][j];	
