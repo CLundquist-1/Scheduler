@@ -28,8 +28,8 @@ public class Constraints {
 		temp2 = CharToTask(task);
 		if(temp2 == -1)
 			return temp2;
-		for(int t : fpa) {
-			if(temp1 == t || temp2 == t)
+		for(int i = 0; i < fpa.size(); i += 2) {
+			if(temp1 == fpa.get(i) || temp2 == fpa.get(i+1))
 				return 2;
 		}
 		fpa.add(temp1);
@@ -159,7 +159,7 @@ public class Constraints {
 	private String printMP() {
 		String ret = Main.mpKey + "\n";
 		for(int i = 0; i < mp.length ; i++) {
-			for(int j = 0; j < mp[i].length-1; j++) {
+			for(int j = 0; j < mp[i].length; j++) {
 				if(j != 0)
 					ret += " ";
 				ret += mp[i][j];	
