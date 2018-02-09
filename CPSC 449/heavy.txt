@@ -6,6 +6,7 @@ forced partial assignment:
 (2,B)
 (3,E)
 (4,D)
+(8,C)
 
 forbidden machine:
 

@@ -53,7 +53,7 @@ public class Main {
 			try {
 				ParseInput(args[0]);
 			} catch(IOException e) {
-				//System.out.println(e.getMessage());				//Print to the console instead
+				System.out.println(e.getMessage());				//Print to the console instead
 				out.write(e.getMessage());
 				out.close();
 				return;
@@ -137,7 +137,9 @@ public class Main {
 			if(!CheckForbidden(0, i))
 				continue;
 			int iPenalty = con.mp[0][i];
-			//tPenalty += iPenalty;
+			tPenalty += iPenalty;
+			if(tPenalty > bestPenalty)
+				continue;
 			for(int j = min[1]; j < max[1]; j++) {
 				if(j == i)
 					continue;
@@ -147,7 +149,9 @@ public class Main {
 					continue;
 				int jPenalty = con.mp[1][j];
 				jPenalty += CheckNearPenalty(j,i);
-				//tPenalty += jPenalty;
+				tPenalty += jPenalty;
+				if(tPenalty > bestPenalty)
+					continue;
 				for(int k = min[2]; k < max[2]; k++) {
 					if(k == j || k == i)
 						continue;
@@ -157,7 +161,9 @@ public class Main {
 						continue;
 					int kPenalty = con.mp[2][k];
 					kPenalty += CheckNearPenalty(k,j);
-					//tPenalty += kPenalty;
+					tPenalty += kPenalty;
+					if(tPenalty > bestPenalty)
+						continue;
 					for(int l = min[3]; l < max[3]; l++) {
 						if(l == k || l == j || l == i)
 							continue;
@@ -167,7 +173,9 @@ public class Main {
 							continue;
 						int lPenalty = con.mp[3][l];
 						lPenalty += CheckNearPenalty(l,k);
-						//tPenalty += lPenalty;
+						tPenalty += lPenalty;
+						if(tPenalty > bestPenalty)
+							continue;
 						for(int m = min[4]; m < max[4]; m++) {
 							if(m == l || m == k || m == j || m == i)
 								continue;
@@ -177,7 +185,9 @@ public class Main {
 								continue;
 							int mPenalty = con.mp[4][m];
 							mPenalty += CheckNearPenalty(m,l);
-							//tPenalty += mPenalty;
+							tPenalty += mPenalty;
+							if(tPenalty > bestPenalty)
+								continue;
 							for(int n = min[5]; n < max[5]; n++) {
 								if(n == m || n == l || n == k || n == j || n == i)
 									continue;
@@ -187,7 +197,9 @@ public class Main {
 									continue;
 								int nPenalty = con.mp[5][n];
 								nPenalty += CheckNearPenalty(n,m);
-								//tPenalty += nPenalty;
+								tPenalty += nPenalty;
+								if(tPenalty > bestPenalty)
+									continue;
 								for(int o = min[6]; o < max[6]; o++) {
 									if(o == n || o == m || o == l || o == k || o == j || o == i)
 										continue;
@@ -197,7 +209,9 @@ public class Main {
 										continue;
 									int oPenalty = con.mp[6][o];
 									oPenalty += CheckNearPenalty(o,n);
-									//tPenalty += oPenalty;
+									tPenalty += oPenalty;
+									if(tPenalty > bestPenalty)
+										continue;
 									for(int p = min[7]; p < max[7]; p++) {
 										if(p == o || p == n || p == m || p == l || p == k || p == j || p == i)
 											continue;
@@ -210,41 +224,41 @@ public class Main {
 										int pPenalty = con.mp[7][p];
 										pPenalty += CheckNearPenalty(p,o);
 										pPenalty += CheckNearPenalty(p,i);
-										tPenalty += iPenalty;
+										/*tPenalty += iPenalty;
 										tPenalty += jPenalty;
 										tPenalty += kPenalty;
 										tPenalty += lPenalty;
 										tPenalty += mPenalty;
 										tPenalty += nPenalty;
-										tPenalty += oPenalty;
+										tPenalty += oPenalty;*/
 										tPenalty += pPenalty;
 										if(tPenalty < bestPenalty) {
 											bestPenalty = tPenalty;
 											bestState = new int[]{i, j, k, l, m, n, o, p};
 										}
-										tPenalty -= iPenalty;
+										/*tPenalty -= iPenalty;
 										tPenalty -= jPenalty;
 										tPenalty -= kPenalty;
 										tPenalty -= lPenalty;
 										tPenalty -= mPenalty;
 										tPenalty -= nPenalty;
-										tPenalty -= oPenalty;
+										tPenalty -= oPenalty;*/
 										tPenalty -= pPenalty;
 										//tPenalty -= pPenalty;
 									}
-									//tPenalty -= oPenalty;
+									tPenalty -= oPenalty;
 								}
-								//tPenalty -= nPenalty;
+								tPenalty -= nPenalty;
 							}
-							//tPenalty -= mPenalty;
+							tPenalty -= mPenalty;
 						}
-						//tPenalty -= lPenalty;
+						tPenalty -= lPenalty;
 					}
-					//tPenalty -= kPenalty;
+					tPenalty -= kPenalty;
 				}
-				//tPenalty -= jPenalty;
+				tPenalty -= jPenalty;
 			}
-			//tPenalty -= iPenalty;
+			tPenalty -= iPenalty;
 		}
 	}
 	
