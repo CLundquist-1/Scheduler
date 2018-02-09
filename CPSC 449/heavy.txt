@@ -4,6 +4,8 @@ minimalisticexample
 forced partial assignment:
 (1,A)
 (2,B)
+(3,E)
+(4,D)
 
 forbidden machine:
 
@@ -20,4 +22,5 @@ machine penalties:
 1 1 1 1 1 1 1 1
 
 too-near penalities
-(A,B,3)
+(D,E,4)
+(A,B,6)

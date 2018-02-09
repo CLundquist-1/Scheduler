@@ -33,6 +33,8 @@ public class Main {
 	static int bestPenalty = Integer.MAX_VALUE;
 	
 	static boolean[] chosen = new boolean[8];
+	static int[] min = new int[8];
+	static int[] max = new int[8];
 	
 	
 	public static void main(String[] args) {
@@ -54,7 +56,7 @@ public class Main {
 			System.out.println(noSolution);
 			return;
 		}
-		
+		SetMinMax();
 		BruteForce();
 		System.out.println(SolutionToString());
 		System.out.println(StateToString(cState) + " Penalty: " + cPenalty);
@@ -69,6 +71,19 @@ public class Main {
 	public static void InitializeState(int[] state) {
 		for(int i = 0; i < state.length; i++)
 			state[i] = -1;
+	}
+	
+	public static void SetMinMax() {
+		for(int i = 0; i < max.length; i++) {
+			if(cState[i] == -1) {
+				min[i] = 0;
+				max[i] = 8;
+			}
+			else {
+				min[i] = cState[i];
+				max[i] = cState[i] + 1;
+			}
+		}
 	}
 	
 	
@@ -95,12 +110,12 @@ public class Main {
 	
 	/////////////////////////////////////////////////////////////////Solution Algorithms///////////////////////////////////////////////////
 	public static void BruteForce() {
-		for(int i = 0; i < 8; i++) {
+		for(int i = min[0]; i < max[0]; i++) {
 			if(!CheckForbidden(0, i))
 				continue;
 			int iPenalty = con.mp[0][i];
 			//tPenalty += iPenalty;
-			for(int j = 0; j < 8; j++) {
+			for(int j = min[1]; j < max[1]; j++) {
 				if(j == i)
 					continue;
 				if(!CheckForbidden(1, j))
@@ -110,7 +125,7 @@ public class Main {
 				int jPenalty = con.mp[1][j];
 				jPenalty += CheckNearPenalty(j,i);
 				//tPenalty += jPenalty;
-				for(int k = 0; k < 8; k++) {
+				for(int k = min[2]; k < max[2]; k++) {
 					if(k == j || k == i)
 						continue;
 					if(!CheckForbidden(2, k))
@@ -120,7 +135,7 @@ public class Main {
 					int kPenalty = con.mp[2][k];
 					kPenalty += CheckNearPenalty(k,j);
 					//tPenalty += kPenalty;
-					for(int l = 0; l < 8; l++) {
+					for(int l = min[3]; l < max[3]; l++) {
 						if(l == k || l == j || l == i)
 							continue;
 						if(!CheckForbidden(3, l))
@@ -130,7 +145,7 @@ public class Main {
 						int lPenalty = con.mp[3][l];
 						lPenalty += CheckNearPenalty(l,k);
 						//tPenalty += lPenalty;
-						for(int m = 0; m < 8; m++) {
+						for(int m = min[4]; m < max[4]; m++) {
 							if(m == l || m == k || m == j || m == i)
 								continue;
 							if(!CheckForbidden(4, m))
@@ -140,7 +155,7 @@ public class Main {
 							int mPenalty = con.mp[4][m];
 							mPenalty += CheckNearPenalty(m,l);
 							//tPenalty += mPenalty;
-							for(int n = 0; n < 8; n++) {
+							for(int n = min[5]; n < max[5]; n++) {
 								if(n == m || n == l || n == k || n == j || n == i)
 									continue;
 								if(!CheckForbidden(5, n))
@@ -150,7 +165,7 @@ public class Main {
 								int nPenalty = con.mp[5][n];
 								nPenalty += CheckNearPenalty(n,m);
 								//tPenalty += nPenalty;
-								for(int o = 0; o < 8; o++) {
+								for(int o = min[6]; o < max[6]; o++) {
 									if(o == n || o == m || o == l || o == k || o == j || o == i)
 										continue;
 									if(!CheckForbidden(6, o))
@@ -160,7 +175,7 @@ public class Main {
 									int oPenalty = con.mp[6][o];
 									oPenalty += CheckNearPenalty(o,n);
 									//tPenalty += oPenalty;
-									for(int p = 0; p < 8; p++) {
+									for(int p = min[7]; p < max[7]; p++) {
 										if(p == o || p == n || p == m || p == l || p == k || p == j || p == i)
 											continue;
 										if(!CheckForbidden(7, p))
@@ -248,11 +263,14 @@ public class Main {
 	public static int CheckNearPenalty(int task1, int task2) {
 		if(task1 == -1 || task2 == -1)
 			return 0;
+		int counter = 0;
 		for(int i = 0; i < con.tnp.size(); i ++) {
-			if((i+1) % 3 == 0)
+			if(counter == 2) {
+				counter = 0;
 				continue;
+			}
 			if(con.tnp.get(i) == task1) {
-				if((i+1) % 2 == 0) {
+				if(counter == 1) {
 					if(con.tnp.get(i-1) == task2)
 						return con.tnp.get(i+1);
 				}
@@ -261,6 +279,7 @@ public class Main {
 						return con.tnp.get(i+2);
 				}
 			}
+			counter++;
 		}
 		return 0;
 	}
